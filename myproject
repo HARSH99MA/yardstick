@@ -1,0 +1,45 @@
+import re
+
+ics_content = """BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//internshala.com//NONSGML EVENT//EN
+METHOD:REQUEST
+BEGIN:VEVENT
+ORGANIZER;CN=Yardstick:MAILTO:no-reply@internshala.com
+UID:20240722T002508.000000-1232720531@internshala.com
+DTSTAMP:20240722T002508
+DTSTART;TZID="Asia/Kolkata":20240724T180000Z
+DTEND;TZID="Asia/Kolkata":20240724T190000Z
+LOCATION:
+SUMMARY:Assignment due: Yardstick
+DESCRIPTION: 
+END:VEVENT
+END:VCALENDAR"""
+
+# Function to extract event details
+def extract_event_details(ics_content):
+    event_details = {}
+
+    dtstamp_match = re.search(r'DTSTAMP:(\d+T\d+)', ics_content)
+    dtstart_match = re.search(r'DTSTART;TZID="Asia/Kolkata":(\d+T\d+)', ics_content)
+    dtend_match = re.search(r'DTEND;TZID="Asia/Kolkata":(\d+T\d+)', ics_content)
+    summary_match = re.search(r'SUMMARY:(.*)', ics_content)
+
+    if dtstamp_match:
+        event_details['DTSTAMP'] = dtstamp_match.group(1)
+    if dtstart_match:
+        event_details['DTSTART'] = dtstart_match.group(1)
+    if dtend_match:
+        event_details['DTEND'] = dtend_match.group(1)
+    if summary_match:
+        event_details['SUMMARY'] = summary_match.group(1)
+
+    return event_details
+
+# Extract event details
+event_details = extract_event_details(ics_content)
+
+# Display event details
+print("Event Details:")
+for key, value in event_details.items():
+    print(f"{key}: {value}")
